@@ -1,0 +1,29 @@
+services:
+  app:
+    image: eclipse-temurin:21
+    ports:
+      - 8081:8080
+    depends_on:
+      - database
+      - testdb
+    volumes:
+      - ./workspace:/workspace
+      - hrdb-images:/workspace/img
+    working_dir: /workspace
+    entrypoint: ["java", "-jar", "ojt-0.0.1-SNAPSHOT.jar"]
+    tty: true
+    networks:
+      - jenkins_net
+
+volumes:
+  jenkins:
+    driver: local
+
+networks:
+  hrdb_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.201.0/24
+          gateway: 192.168.201.1
