@@ -3,24 +3,31 @@ services:
     image: eclipse-temurin:21
     ports:
       - 8081:8080
-    depends_on:
-      - database
-      - testdb
     volumes:
       - ./workspace:/workspace
-      - hrdb-images:/workspace/img
+      - jenk:/workspace/img
     working_dir: /workspace
-    entrypoint: ["java", "-jar", "ojt-0.0.1-SNAPSHOT.jar"]
+    entrypoint: ["java", "-jar", "jenkins-0.0.1-SNAPSHOT.jar"]
     tty: true
     networks:
       - jenkins_net
 
-volumes:
   jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "18080:8080"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+
+volumes:
+  jenk:
     driver: local
+  jenkins_home:
 
 networks:
-  hrdb_net:
+  jenkins_net:
     driver: bridge
     ipam:
       driver: default
